@@ -34,16 +34,22 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <header id="header">
         <?php
         NavBar::begin([
-            'brandLabel' => 'Student Management System',
+            'brandLabel' => '<i class="bi bi-mortarboard"></i> Student Management System',
             'brandUrl' => Yii::$app->homeUrl,
-            'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+            'options' => ['class' => 'navbar-expand-md navbar-dark bg-primary fixed-top']
         ]);
         echo Nav::widget([
-            'options' => ['class' => 'navbar-nav'],
+            'options' => ['class' => 'navbar-nav ms-auto'],
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'About', 'url' => ['/site/about']],
-                // ['label' => 'Contact', 'url' => ['/site/contact']],
+                [
+                    'label' => 'Services',
+                    'items' => [
+                        ['label' => 'Service 1', 'url' => ['/site/service1']],
+                        ['label' => 'Service 2', 'url' => ['/site/service2']],
+                    ],
+                ],
                 Yii::$app->user->isGuest
                 ? ['label' => 'Admin', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
@@ -61,7 +67,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     </header>
 
     <main id="main" class="flex-shrink-0" role="main">
-        <div class="container">
+        <div class="container mt-5 pt-4">
             <?php if (!empty($this->params['breadcrumbs'])): ?>
                 <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
             <?php endif ?>
@@ -70,11 +76,17 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         </div>
     </main>
 
-    <footer id="footer" class="mt-auto py-3 bg-light">
+    <footer id="footer" class="mt-auto py-4 bg-dark text-light">
         <div class="container">
-            <div class="row text-muted">
-                <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-                <!-- <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div> -->
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    &copy; My Company <?= date('Y') ?>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-light me-2"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-light me-2"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+                </div>
             </div>
         </div>
     </footer>

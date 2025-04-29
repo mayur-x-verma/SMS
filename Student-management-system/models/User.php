@@ -101,4 +101,19 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     {
         return $this->password === $password;
     }
+
+    public static function findOne($condition)
+    {
+        // Replace this with actual database query logic
+        $rollno = $condition['rollno'] ?? null;
+        if ($rollno) {
+            // Example query using Yii's DB component
+            return (new \yii\db\Query())
+                ->select('*')
+                ->from('user') // Replace 'user' with your table name
+                ->where(['rollno' => $rollno])
+                ->one();
+        }
+        return null;
+    }
 }

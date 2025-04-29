@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\StudentLoginForm;
 
 class SiteController extends Controller
 {
@@ -124,5 +125,10 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionStudentLogin()
+    {
+        return $this->render('studentLogin');
     }
 }

@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    // 'layout' => 'student',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -47,6 +48,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // '' => 'site/index', // Redirect root URL to site/index
+                // '<action:\w+>' => 'site/<action>', // Map actions in SiteController
             ],
         ],
 
