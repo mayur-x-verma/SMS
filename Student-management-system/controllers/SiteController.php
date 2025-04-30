@@ -2,14 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\AdminLoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\StudentLoginForm;
+use app\models\StudentMaster;
 
 class SiteController extends Controller
 {
@@ -70,22 +70,27 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
+    /**
+     * Handles the admin login functionality.
+     *
+     * If the user is already logged in, they are redirected to the homepage.
+     * Otherwise, it validates the login form and logs in the admin user.
+     *
+     * @return Response|string Redirects to the previous page or renders the login view.
+     */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        $model = new AdminLoginForm();
 
-        $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect(['registration']);
         }
 
-        $model->password = '';
         return $this->render('login', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Logout action.
@@ -127,8 +132,17 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionStudentLogin()
+    public function actionRegistration()
     {
-        return $this->render('studentLogin');
+        $model = new StudentMaster();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Registration successful!');
+            return $this->redirect(['view', 'id' => $model->id]); // or any success page
+        }
+
+        return $this->render('registration', [
+            'model' => $model,
+        ]);
     }
 }

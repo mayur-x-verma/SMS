@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-
+use app\models\StudentLoginForm;
 
 class StudentController extends Controller
 {
@@ -54,7 +54,12 @@ class StudentController extends Controller
     }
     public function actionStudentLogin()
     {
-        return $this->render('Login');
+        $model = new StudentLoginForm(); // or whatever model you are using
+
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
+
 }
 

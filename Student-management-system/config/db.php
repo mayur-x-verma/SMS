@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'sqlsrv:host=Admin;dbname=Practice',
+    'dsn' => 'sqlsrv:Server=Admin;Database=Practice',
     'username' => '',
     'password' => '',
     'charset' => 'utf8',
