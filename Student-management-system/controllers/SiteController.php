@@ -188,7 +188,30 @@ class SiteController extends Controller
             ]);
         }
     }
+    public function actionView($id)
+    {
+        $model = StudentMaster::findOne($id);
 
+        if (!$model) {
+            Yii::error("Model not found for ID: $id", __METHOD__);
+            throw new NotFoundHttpException('The requested student does not exist.');
+        }
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                Yii::info("Model successfully updated for ID: $id", __METHOD__);
+                return $this->render('view', [
+                    'model' => $model,
+                ]);
+            } else {
+                Yii::error("Failed to save model for ID: $id", __METHOD__);
+            }
+        }
+
+        return $this->render('view', [
+            'model' => $model,
+        ]);
+    }
 
     /**
      * Creates a new StudentMaster model.
@@ -243,7 +266,7 @@ class SiteController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Deleted!');
+        Yii::$app->session->setFlash('success', 'Deleted student with id: ' . $id);
         return $this->redirect(['student-list', 'id' => $this->id]);
     }
 
@@ -255,10 +278,6 @@ class SiteController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
 
-    public function actionView()
-    {
-        return $this->render('view');
-    }
     protected function findModel($id)
     {
         if (($model = StudentMaster::findOne(['id' => $id])) !== null) {
