@@ -15,23 +15,23 @@ class StudentMaster extends ActiveRecord
     public function rules()
     {
         return [
-            [['roll_no', 'enrol_no', 'course', 'semester', 'exam_type', 'student_type', 'dob'], 'required'],
-            [['semester'], 'integer'],
-            [['dob', 'created_at', 'updated_at'], 'safe'],
-            [['address'], 'string'],
-            [['roll_no', 'enrol_no'], 'string', 'max' => 20],
-            [['phone_no'], 'string', 'max' => 15],
-            [['sub1', 'sub2', 'sub3', 'sub4', 'sub5'], 'string', 'max' => 100],
-            [['exam_type', 'student_type', 'course'], 'string', 'max' => 50],
+            [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB'], 'required'],
+            [['Sem'], 'integer'],
+            [['DOB', 'Created_at', 'Updated_at'], 'safe'],
+            [['Address'], 'string'],
+            [['Roll_no', 'Enroll_no'], 'string', 'max' => 20],
+            [['Phone_no'], 'string', 'max' => 15],
+            [['Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5'], 'string', 'max' => 100],
+            [['Exam_type', 'Student_type', 'Course'], 'string', 'max' => 50],
         ];
     }
 
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_at = date('Y-m-d H:i:s');
+            $this->Created_at = date('Y-m-d H:i:s');
         }
-        $this->updated_at = date('Y-m-d H:i:s');
+        $this->Updated_at = date('Y-m-d H:i:s');
         return parent::beforeSave($insert);
     }
 }
