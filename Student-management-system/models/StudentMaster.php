@@ -16,7 +16,7 @@ class StudentMaster extends ActiveRecord
     {
         return [
             [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB'], 'required'],
-            [['Sem'], 'integer'],
+            [['Sem'], 'string'],
             [['DOB', 'Created_at', 'Updated_at'], 'safe'],
             [['Address'], 'string'],
             [['Roll_no', 'Enroll_no'], 'string', 'max' => 20],

@@ -2,6 +2,7 @@
 /**
  * @var yii\web\View $this
  * @var app\models\StudentMaster $model
+ * @var app\models\SubjectMaster $subjectModel
  */
 
 $recentStudent = app\models\StudentMaster::find()->orderBy(['id' => SORT_DESC])->one();
@@ -30,12 +31,12 @@ $this->title = 'Student Registration';
                         <?php
 
 
-                        $courses = ArrayHelper::map(app\models\StudentMaster::find()->select(['Course'])->distinct()->all(), 'Course', 'Course');
-                        $semesters = ArrayHelper::map(app\models\StudentMaster::find()->select(['Sem'])->distinct()->all(), 'Sem', 'Sem');
+                        $courses = ArrayHelper::map(app\models\SubjectMaster::find()->select(['Course'])->distinct()->all(), 'Course', 'Course');
+                        $semesters = ArrayHelper::map(app\models\SubjectMaster::find()->select(['Semester'])->distinct()->all(), 'Semester', 'Semester');
                         ?>
 
-                        <?= $form->field($model, 'Course')->dropDownList($courses, ['prompt' => 'Select Course'])->label(null, ['style' => 'font-weight: bold;']) ?>
-                        <?= $form->field($model, 'Sem')->dropDownList($semesters, ['prompt' => 'Select Semester'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                        <?= $form->field($model, 'Course')->dropDownList($courses, ['id' => 'course-dropdown', 'prompt' => 'Select Course'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                        <?= $form->field($model, 'Sem')->dropDownList($semesters, ['id' => 'semester-dropdown', 'prompt' => 'Select Course'])->label(null, ['style' => 'font-weight: bold;']) ?>
 
                         <!-- Radio button for Exam Type -->
                         <?= $form->field($model, 'Exam_type')->radioList([
@@ -101,13 +102,29 @@ $this->title = 'Student Registration';
                 <div class="row">
                     <div class="col-md-6">
                         <!-- Dropdown for Subjects -->
-                        <?php $subjects = [
-                            'Subject01' => 'Subject01',
-                            'Subject02' => 'Subject02',
-                            'Subject03' => 'Subject03',
-                            'Subject04' => 'Subject04',
-                            'Subject05' => 'Subject05',
-                        ]; ?>
+                        <?php
+                        // $subjects = ArrayHelper::map(
+                        //     app\models\SubjectMaster::find()->select(['Subject'])->distinct()->all(),
+                        //     'Subject',
+                        //     'Subject'
+                        // );
+                        ?>
+
+                        <?php
+                        $subjects = [];
+                        if (!empty($Model->Course) && !empty($Model->Semester)) {
+                            $subjects = ArrayHelper::map(
+                                app\models\SubjectMaster::find()
+                                    ->select(['Subject'])
+                                    ->distinct()
+                                    ->where(['Course' => $Model->Course, 'Semester' => $Model->Semester])
+                                    ->all(),
+                                'Subject',
+                                'Subject'
+                            );
+                        }
+
+                        ?>
 
                         <?= $form->field($model, 'Sub1')->dropDownList($subjects, ['prompt' => 'Select Subject 1'])->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?= $form->field($model, 'Sub2')->dropDownList($subjects, ['prompt' => 'Select Subject 2'])->label(null, ['style' => 'font-weight: bold;']) ?>
