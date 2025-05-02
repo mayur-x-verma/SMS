@@ -23,24 +23,16 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+                'only' => ['logout'], // restrict these actions
                 'rules' => [
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['@'], // '@' = any authenticated user
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
                 ],
             ],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -246,9 +238,15 @@ class SiteController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'update successfull!');
-            return $this->redirect(['student-list', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->Gender = implode(',', $model->Gender);
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'update successfull!');
+                return $this->redirect(['student-list', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'update failed!');
+                return $this->redirect(['student-list', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

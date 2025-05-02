@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use app\models\AdminUser; // Ensure this class exists in the app\models namespace
 use yii\helpers\VarDumper; // Import the VarDumper class from yii\helpers
-
+use \yii\web\IdentityInterface;
 class AdminLoginForm extends Model
 {
     public $username;
