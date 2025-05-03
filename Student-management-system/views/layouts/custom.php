@@ -41,17 +41,17 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav ms-auto'],
             'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
+                ['label' => 'Home', 'url' => ['/admin/index']],
+                ['label' => 'About', 'url' => ['/admin/about']],
                 [
                     'label' => 'Services',
                     'items' => [
-                        ['label' => 'Service 1', 'url' => ['/site/service1']],
-                        ['label' => 'Service 2', 'url' => ['/site/service2']],
+                        ['label' => 'Service 1', 'url' => ['/admin/service1']],
+                        ['label' => 'Service 2', 'url' => ['/admin/service2']],
                     ],
                 ],
                 Yii::$app->user->isGuest
-                ? ['label' => 'Admin', 'url' => ['/site/login']]
+                ? ['label' => 'Admin', 'url' => ['/admin/login']]
                 : '<li class="nav-item">'
                 . Html::beginForm(['/admin/logout'])
                 . Html::submitButton(

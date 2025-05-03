@@ -23,15 +23,17 @@ class AdminLoginForm extends Model
     {
         $user = AdminUser::findOne(['Username' => $this->username]);
 
-        if ($user && $user->Password === $this->password) { // You should hash passwords in real apps!
-            Yii::$app->session->set('admin_id', $user->id); // simulate login session
-            return true;
+        if ($user && $user->Password === $this->password) {
+            return Yii::$app->user->login($user); // this is key!
         }
+
         if (!$user) {
             $this->addError('username', 'Incorrect username.');
+        } else {
+            $this->addError('password', 'Incorrect password.');
         }
-        $this->addError('password', 'Incorrect password.');
 
         return false;
     }
+
 }

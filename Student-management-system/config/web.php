@@ -23,10 +23,10 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\AdminUser',
             'enableAutoLogin' => true,
-            'loginUrl' => ['site/login'],
+            'loginUrl' => ['admin/login'],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'admin/error',
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,

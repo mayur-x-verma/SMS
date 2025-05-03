@@ -12,7 +12,8 @@ use yii\web\NotFoundHttpException;
 use app\models\ContactForm;
 use app\models\StudentMaster;
 use app\models\StudentMasterSearch;
-
+use yii\helpers\ArrayHelper;
+use app\models\SubjectMaster;
 class SiteController extends Controller
 {
     /**
@@ -23,11 +24,12 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'], // restrict these actions
+                'only' => ['registration', 'view', 'create', 'update', 'delete'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'], // '@' = any authenticated user
+
+                        'roles' => ['@'], // '@' means authenticated users only
                     ],
                 ],
             ],
@@ -77,7 +79,7 @@ class SiteController extends Controller
         $model = new AdminLoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(['registration']);
+            return $this->redirect(['admin/registration']);
         }
 
         return $this->render('login', [
@@ -159,73 +161,100 @@ class SiteController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionStudentList($id)
-    {
-        try {
-            $searchModel = new StudentMasterSearch();
-            $dataProvider = $searchModel->search($this->request->queryParams);
+    // public function actionStudentList()
+    // {
+    //     try {
+    //         $searchModel = new StudentMasterSearch();
+    //         $searchModel->search = Yii::$app->request->get('search');
+    //         $dataProvider = $searchModel->search($this->request->queryParams);
 
-            return $this->render('studentList', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } catch (\Exception $e) {
-            // Log the error
-            Yii::error("Exception in actionStudentList: " . $e->getMessage(), __METHOD__);
+    //         return $this->render('studentList', [
+    //             'searchModel' => $searchModel,
+    //             'dataProvider' => $dataProvider,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         // Log the error
+    //         Yii::error("Exception in actionStudentList: " . $e->getMessage(), __METHOD__);
 
-            // Optionally show a basic error message to the user
-            return $this->render('error', [
-                'name' => 'Error loading student list',
-                'message' => $e->getMessage(),
-            ]);
-        }
-    }
-    public function actionView($id)
-    {
-        $model = StudentMaster::findOne($id);
+    //         // Optionally show a basic error message to the user
+    //         return $this->render('error', [
+    //             'name' => 'Error loading student list',
+    //             'message' => $e->getMessage(),
+    //         ]);
+    //     }
+    // }
+    // public function actionView($id)
+    // {
+    //     $model = StudentMaster::findOne($id);
 
-        if (!$model) {
-            Yii::error("Model not found for ID: $id", __METHOD__);
-            throw new NotFoundHttpException('The requested student does not exist.');
-        }
+    //     if (!$model) {
+    //         Yii::error("Model not found for ID: $id", __METHOD__);
+    //         throw new NotFoundHttpException('The requested student does not exist.');
+    //     }
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                Yii::info("Model successfully updated for ID: $id", __METHOD__);
-                return $this->render('view', [
-                    'model' => $model,
-                ]);
-            } else {
-                Yii::error("Failed to save model for ID: $id", __METHOD__);
-            }
-        }
+    //     if ($this->request->isPost) {
+    //         if ($model->load($this->request->post()) && $model->save()) {
+    //             Yii::info("Model successfully updated for ID: $id", __METHOD__);
+    //             return $this->render('view', [
+    //                 'model' => $model,
+    //             ]);
+    //         } else {
+    //             Yii::error("Failed to save model for ID: $id", __METHOD__);
+    //         }
+    //     }
 
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
+    //     return $this->render('view', [
+    //         'model' => $model,
+    //     ]);
+    // }
 
     /**
      * Creates a new StudentMaster model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
-    {
-        $model = new StudentMaster();
+    // public function actionGetSubjects()
+    // {
+    //     Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['registration', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
+    //     $course = Yii::$app->request->post('depdrop_parents')[0] ?? null;
+    //     $semester = Yii::$app->request->post('depdrop_parents')[1] ?? null;
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+    //     if ($course !== null && $semester !== null) {
+    //         $subjects = SubjectMaster::find()
+    //             ->select(['Subject'])
+    //             ->distinct()
+    //             ->where(['Course' => $course, 'Semester' => $semester])
+    //             ->all();
+
+    //         $output = [];
+    //         foreach ($subjects as $subject) {
+    //             $output[] = ['id' => $subject->Subject, 'name' => $subject->Subject];
+    //         }
+
+    //         return Yii::$app->response->data = ['output' => $output, 'selected' => ''];
+    //     }
+
+    //     return Yii::$app->response->data = ['output' => [], 'selected' => ''];
+    // }
+
+
+    // public function actionCreate()
+    // {
+    //     $model = new StudentMaster();
+
+    //     if ($this->request->isPost) {
+    //         if ($model->load($this->request->post()) && $model->save()) {
+    //             return $this->redirect(['registration', 'id' => $model->id]);
+    //         }
+    //     } else {
+    //         $model->loadDefaultValues();
+    //     }
+
+    //     return $this->render('create', [
+    //         'model' => $model,
+    //     ]);
+    // }
 
     /**
      * Updates an existing StudentMaster model.
@@ -234,25 +263,25 @@ class SiteController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+    // public function actionUpdate($id)
+    // {
+    //     $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post())) {
-            $model->Gender = implode(',', $model->Gender);
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'update successfull!');
-                return $this->redirect(['student-list', 'id' => $model->id]);
-            } else {
-                Yii::$app->session->setFlash('error', 'update failed!');
-                return $this->redirect(['student-list', 'id' => $model->id]);
-            }
-        }
+    //     if ($this->request->isPost && $model->load($this->request->post())) {
+    //         $model->Gender = implode(',', $model->Gender);
+    //         if ($model->save()) {
+    //             Yii::$app->session->setFlash('success', 'update successfull!');
+    //             return $this->redirect(['student-list', 'id' => $model->id]);
+    //         } else {
+    //             Yii::$app->session->setFlash('error', 'update failed!');
+    //             return $this->redirect(['student-list', 'id' => $model->id]);
+    //         }
+    //     }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+    //     return $this->render('update', [
+    //         'model' => $model,
+    //     ]);
+    // }
 
     /**
      * Deletes an existing StudentMaster model.
@@ -261,12 +290,12 @@ class SiteController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Deleted student with id: ' . $id);
-        return $this->redirect(['student-list', 'id' => $this->id]);
-    }
+    // public function actionDelete($id)
+    // {
+    //     $this->findModel($id)->delete();
+    //     Yii::$app->session->setFlash('success', 'Deleted student with id: ' . $id);
+    //     return $this->redirect(['student-list', 'id' => $this->id]);
+    // }
 
     /**
      * Finds the StudentMaster model based on its primary key value.

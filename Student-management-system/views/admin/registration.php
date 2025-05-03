@@ -103,28 +103,13 @@ $this->title = 'Student Registration';
                     <div class="col-md-6">
                         <!-- Dropdown for Subjects -->
                         <?php
-                        // $subjects = ArrayHelper::map(
-                        //     app\models\SubjectMaster::find()->select(['Subject'])->distinct()->all(),
-                        //     'Subject',
-                        //     'Subject'
-                        // );
+                        $subjects = ArrayHelper::map(
+                            app\models\SubjectMaster::find()->select(['Subject'])->distinct()->all(),
+                            'Subject',
+                            'Subject'
+                        );
                         ?>
 
-                        <?php
-                        $subjects = [];
-                        if (!empty($Model->Course) && !empty($Model->Semester)) {
-                            $subjects = ArrayHelper::map(
-                                app\models\SubjectMaster::find()
-                                    ->select(['Subject'])
-                                    ->distinct()
-                                    ->where(['Course' => $Model->Course, 'Semester' => $Model->Semester])
-                                    ->all(),
-                                'Subject',
-                                'Subject'
-                            );
-                        }
-
-                        ?>
 
                         <?= $form->field($model, 'Sub1')->dropDownList($subjects, ['prompt' => 'Select Subject 1'])->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?= $form->field($model, 'Sub2')->dropDownList($subjects, ['prompt' => 'Select Subject 2'])->label(null, ['style' => 'font-weight: bold;']) ?>

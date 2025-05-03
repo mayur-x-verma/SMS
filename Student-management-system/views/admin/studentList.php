@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-// use yii\bootstrap5\;
+use yii\bootstrap5\LinkPager;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -11,7 +11,15 @@ $this->title = 'Student Listing';
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<h2>search bar</h2>
+<div class="mb-3">
+    <?= Html::beginForm(['admin/student-list'], 'get', ['class' => 'form-inline']) ?>
+    <div class="input-group">
+        <?= Html::textInput('search', Yii::$app->request->get('search'), ['class' => 'form-control', 'placeholder' => 'Search...']) ?>
+        <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i> Search</button>
+    </div>
+    <?= Html::endForm() ?>
+</div>
+
 <div class="student-master-index container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -26,43 +34,58 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-hover table-bordered'],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'header' => 'S.No',
+                'class' => 'yii\grid\SerialColumn'
+            ],
 
             [
+                'header' => 'ID',
                 'attribute' => 'id',
                 'headerOptions' => ['class' => 'text-center'],
                 'contentOptions' => ['class' => 'text-center'],
             ],
-            'Roll_no',
-            'Enroll_no',
-            'Course',
-            'Sem',
-            'Exam_type',
-            'Student_type',
             [
+                'attribute' => 'Roll_no',
+                'header' => 'Roll Number',
+            ],
+            [
+                'attribute' => 'Enroll_no',
+                'header' => 'Enroll Number',
+            ],
+            [
+                'attribute' => 'Course',
+                'header' => 'Course',
+            ],
+            [
+                'attribute' => 'Sem',
+                'header' => 'Semester',
+            ],
+            [
+                'attribute' => 'Exam_type',
+                'header' => 'Exam Type',
+            ],
+            [
+                'attribute' => 'Student_type',
+                'header' => 'Student Type',
+            ],
+            [
+                'header' => 'Gender',
                 'attribute' => 'Gender',
                 'contentOptions' => ['class' => 'text-capitalize'],
             ],
             [
+                'header' => 'DOB',
                 'attribute' => 'DOB',
                 'format' => ['date', 'php:Y-m-d'],
             ],
-            'Phone_no',
             [
-                'attribute' => 'Address',
-                'contentOptions' => ['class' => 'text-truncate', 'style' => 'max-width: 200px;'],
+                'header' => 'Ph No.',
+                'attribute' => 'Phone_no',
             ],
-            [
-                'attribute' => 'Created_at',
-                'format' => ['date', 'php:Y-m-d H:i:s'],
-            ],
-            [
-                'attribute' => 'Updated_at',
-                'format' => ['date', 'php:Y-m-d H:i:s'],
-            ],
-
             [
                 'class' => 'yii\grid\ActionColumn',
+                'header' => 'Actions',
                 'headerOptions' => ['class' => 'text-center'],
                 'contentOptions' => ['class' => 'text-center'],
                 'template' => '{view} {update} {delete}',
@@ -84,6 +107,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
         ],
+    ]); ?>
+</div>
+<div class="card-footer">
+    <?= LinkPager::widget([
+        'pagination' => $dataProvider->getPagination(),
+        'options' => ['class' => 'pagination justify-content-center'],
+        'maxButtonCount' => 5, // Show pagination after 5 rows
     ]); ?>
 </div>
 </div>

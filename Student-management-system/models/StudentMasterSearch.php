@@ -11,6 +11,8 @@ use app\models\StudentMaster;
  */
 class StudentMasterSearch extends StudentMaster
 {
+    public $search;
+
     /**
      * {@inheritdoc}
      */
@@ -39,47 +41,42 @@ class StudentMasterSearch extends StudentMaster
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $formName = null)
+    public function search($params)
     {
         $query = StudentMaster::find();
-
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $this->load($params, $formName);
+        $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'DOB' => $this->DOB,
-            'Created_at' => $this->Created_at,
-            'Updated_at' => $this->Updated_at,
-        ]);
-
-        $query->andFilterWhere(['like', 'Roll_no', $this->Roll_no])
-            ->andFilterWhere(['like', 'Enroll_no', $this->Enroll_no])
-            ->andFilterWhere(['like', 'Course', $this->Course])
-            ->andFilterWhere(['like', 'Sem', $this->Sem])
-            ->andFilterWhere(['like', 'Exam_type', $this->Exam_type])
-            ->andFilterWhere(['like', 'Student_type', $this->Student_type])
-            ->andFilterWhere(['like', 'Gender', $this->Gender])
-            ->andFilterWhere(['like', 'Sub1', $this->Sub1])
-            ->andFilterWhere(['like', 'Sub2', $this->Sub2])
-            ->andFilterWhere(['like', 'Sub3', $this->Sub3])
-            ->andFilterWhere(['like', 'Sub4', $this->Sub4])
-            ->andFilterWhere(['like', 'Sub5', $this->Sub5])
-            ->andFilterWhere(['like', 'Phone_no', $this->Phone_no])
-            ->andFilterWhere(['like', 'Address', $this->Address]);
+        if (!empty($this->search)) {
+            $query->andFilterWhere([
+                'or',
+                ['like', 'Roll_no', $this->search],
+                ['like', 'Enroll_no', $this->search],
+                ['like', 'Course', $this->search],
+                ['like', 'Sem', $this->search],
+                ['like', 'Exam_type', $this->search],
+                ['like', 'Student_type', $this->search],
+                ['like', 'Gender', $this->search],
+                ['like', 'DOB', $this->search],
+                ['like', 'Sub1', $this->search],
+                ['like', 'Sub2', $this->search],
+                ['like', 'Sub3', $this->search],
+                ['like', 'Sub4', $this->search],
+                ['like', 'Sub5', $this->search],
+                ['like', 'Phone_no', $this->search],
+                ['like', 'Address', $this->search],
+            ]);
+        }
 
         return $dataProvider;
     }
+
 }
