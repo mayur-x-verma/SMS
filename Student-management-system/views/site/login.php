@@ -11,44 +11,48 @@ use yii\bootstrap5\Html;
 $this->title = 'Admin Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
+<div class="d-flex justify-content-center align-items-center vh-80 bg-light">
+    <div class="card shadow-lg p-4 rounded" style="width: 100%; max-width: 400px; border-radius: 15px;">
+        <div class="card-header bg-primary text-white text-center rounded-top" style="border-radius: 15px 15px 0 0;">
+            <h3 class="mb-0"><?= Html::encode($this->title) ?></h3>
+        </div>
+        <div class="card-body">
+            <p class="text-center text-muted">Please fill out the following fields to login:</p>
 
             <?php $form = ActiveForm::begin([
                 'id' => 'login-form',
                 'action' => ['site/login'],
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
-                    'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
-                    'inputOptions' => ['class' => 'col-lg-3 form-control'],
-                    'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
+                    'labelOptions' => ['class' => 'form-label fw-bold'],
+                    'inputOptions' => ['class' => 'form-control rounded-pill'],
+                    'errorOptions' => ['class' => 'invalid-feedback'],
                 ],
             ]); ?>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <?= $form->field($model, 'username')->textInput([
+                'autofocus' => true,
+                'placeholder' => 'Enter your username',
+                'class' => 'form-control rounded-pill'
+            ]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'password')->passwordInput([
+                'placeholder' => 'Enter your password',
+                'class' => 'form-control rounded-pill'
+            ]) ?>
 
-
-
-            <div class="form-group">
-                <div>
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+            <div class="form-group text-center mt-4">
+                <?= Html::submitButton('Login', [
+                    'class' => 'btn btn-primary btn-block rounded-pill px-4 py-2',
+                    'name' => 'login-button',
+                    'style' => 'font-size: 16px;'
+                ]) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
-
-            <div style="color:#999;">
-                You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-                To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-            </div>
-
         </div>
+        <!-- <div class="card-footer text-center text-muted">
+            <small>Forgot your password? <a href="#" class="text-primary">Reset it here</a>.</small>
+        </div> -->
     </div>
 </div>

@@ -4,7 +4,9 @@ use Codeception\Command\Bootstrap;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\bootstrap5\LinkPager;
-
+use yii\grid\ActionColumn;
+use yii\helpers\Url;
+use app\models\StudentMaster;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -35,7 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['header' => 'S.no', 'class' => 'yii\grid\SerialColumn'],
                     'id',
-                    'Roll_no',
+                    [
+                        // 'header' => 'Roll No',
+                        'attribute' => 'Roll_no',
+                    ],
                     'Enroll_no',
                     'Course',
                     'Sem',
@@ -49,22 +54,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     'Phone_no',
                     [
                         'header' => 'Actions',
-                        'class' => 'yii\grid\ActionColumn',
-                        'template' => '{view} {update} {delete}',
-                        'buttons' => [
-                            'view' => fn($url) => Html::a('<i class="bi bi-eye-fill"></i>', $url, ['class' => 'btn btn-sm btn-primary']),
-                            'update' => fn($url) => Html::a('<i class="bi bi-pencil"></i>', $url, ['class' => 'btn btn-sm btn-warning']),
-                            'delete' => fn($url) => Html::a('<i class="bi bi-trash"></i>', $url, [
-                                'class' => 'btn btn-sm btn-danger',
-                                'data-confirm' => 'Are you sure?',
-                                'data-method' => 'post',
-                            ]),
-                        ],
+                        'class' => ActionColumn::className(),
+                        'urlCreator' => function ($action, StudentMaster $model) {
+                                        return Url::toRoute([$action, 'id' => $model->id]);
+                                    }
                     ],
                 ],
             ]); ?>
         </div>
-
+        <!-- echo LinkPager::widget([
+        'pagination' => $pagination,
+        ]); -->
         <div class="card-footer">
             <?= LinkPager::widget([
                 'pagination' => $dataProvider->pagination,

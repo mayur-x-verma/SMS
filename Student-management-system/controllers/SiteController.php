@@ -93,12 +93,13 @@ class SiteController extends Controller
      *
      * @return Response
      */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
+    // public function actionLogout()
+    // {
+    //     Yii::$app->user->logout();
+    //     Yii::$app->session->setFlash('success', 'Logout successful!');
+    //     return $this->goHome();
 
-        return $this->goHome();
-    }
+    // }
 
     /**
      * Displays contact page.
@@ -133,8 +134,6 @@ class SiteController extends Controller
         $model = new StudentMaster();
 
         if ($model->load(Yii::$app->request->post())) {
-            // echo "<pre>"; print_r(value: $model); echo "</pre>"; exit;
-            // $model->Gender = implode($model->Gender); 
             $model->Gender = implode(',', $model->Gender);  // Results in: "Male,Other"
 
             // echo "<pre>";
@@ -145,7 +144,6 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('success', 'Registration successful!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             }
-            // return $this->redirect(['view', 'id' => $model->id]); // or any success page
         }
 
         return $this->render('registration', [

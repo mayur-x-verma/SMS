@@ -96,7 +96,7 @@ class AdminController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
+        Yii::$app->session->setFlash('success', 'Logout successful!');
         return $this->goHome();
     }
 
@@ -133,19 +133,20 @@ class AdminController extends Controller
         $model = new StudentMaster();
 
         if ($model->load(Yii::$app->request->post())) {
-            // echo "<pre>"; print_r(value: $model); echo "</pre>"; exit;
-            // $model->Gender = implode($model->Gender); 
             $model->Gender = implode(',', $model->Gender);  // Results in: "Male,Other"
-
+            //add validation check if the student already exists in the database on the basis of Roll_no, course, semester.
+            $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
+            if ($existingStudent) {
+                Yii::$app->session->setFlash('error', 'Student already exists!');
+                return $this->redirect(['student-list']);
+            } else {
+                $model->save() && Yii::$app->session->setFlash('success', 'Registration successful!');
+                return $this->redirect(['student-list']);
+            }
             // echo "<pre>";
             // print_r(value: $model);
             // echo "</pre>";
             // exit;
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Registration successful!');
-                return $this->redirect(['student-list', 'id' => $model->id]);
-            }
-            // return $this->redirect(['view', 'id' => $model->id]); // or any success page
         }
 
         return $this->render('registration', [
@@ -269,7 +270,11 @@ class AdminController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->Gender = implode(',', $model->Gender);
-            if ($model->save()) {
+            $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
+            if ($existingStudent) {
+                Yii::$app->session->setFlash('error', 'Student already exists!');
+                return $this->redirect(['student-list']);
+            } elseif ($model->save()) {
                 Yii::$app->session->setFlash('success', 'update successfull!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             } else {
