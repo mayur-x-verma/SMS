@@ -69,7 +69,16 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <main id="main" class="flex-shrink-0" role="main">
         <div class="container mt-5 pt-4">
             <?php if (!empty($this->params['breadcrumbs'])): ?>
-                <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-light p-3 rounded">
+                        <?= Breadcrumbs::widget([
+                            'links' => $this->params['breadcrumbs'],
+                            'options' => ['class' => 'breadcrumb mb-0'],
+                            'itemTemplate' => "<li class='breadcrumb-item'>{link}</li>\n",
+                            'activeItemTemplate' => "<li class='breadcrumb-item active' aria-current='page'>{link}</li>\n",
+                        ]) ?>
+                    </ol>
+                </nav>
             <?php endif ?>
             <?= Alert::widget() ?>
             <?= $content ?>

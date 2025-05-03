@@ -3,8 +3,9 @@
 namespace app\models;
 
 use yii\base\Model;
-
-class StudentLoginForm extends Model
+use Yii;
+use yii\db\ActiveRecord;
+class StudentLoginForm extends ActiveRecord
 {
     public $roll_no;
     public $dob;

@@ -5,7 +5,7 @@
 /** @var app\models\StudentLoginForm $model */
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Student Login';
 $this->params['breadcrumbs'][] = $this->title;
@@ -18,9 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="login-form">
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'roll_no')->textInput(['maxlength' => true, 'placeholder' => 'Enter your Roll Number']) ?>
+        <?= $form->field($model, 'Roll_no')->textInput(['maxlength' => true, 'placeholder' => 'Enter your Roll Number']) ?>
 
-        <?= $form->field($model, 'dob')->input('date') ?>
+        <?= $form->field($model, 'DOB')->input('date') ?>
 
         <div class="form-group">
             <?= Html::submitButton('Login', ['class' => 'btn btn-primary']) ?>

@@ -56,10 +56,10 @@ class AdminController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
+    // public function actionIndex()
+    // {
+    //     return $this->render('index');
+    // }
 
     /**
      * Login action.
@@ -74,18 +74,18 @@ class AdminController extends Controller
      *
      * @return Response|string Redirects to the previous page or renders the login view.
      */
-    public function actionLogin()
-    {
-        $model = new AdminLoginForm();
+    // public function actionLogin()
+    // {
+    //     $model = new AdminLoginForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(['registration']);
-        }
+    //     if ($model->load(Yii::$app->request->post()) && $model->login()) {
+    //         return $this->redirect(['registration']);
+    //     }
 
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
+    //     return $this->render('login', [
+    //         'model' => $model,
+    //     ]);
+    // }
 
 
     /**
@@ -105,28 +105,28 @@ class AdminController extends Controller
      *
      * @return Response|string
      */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+    // public function actionContact()
+    // {
+    //     $model = new ContactForm();
+    //     if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+    //         Yii::$app->session->setFlash('contactFormSubmitted');
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
+    //         return $this->refresh();
+    //     }
+    //     return $this->render('contact', [
+    //         'model' => $model,
+    //     ]);
+    // }
 
     /**
      * Displays about page.
      *
      * @return string
      */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
+    // public function actionAbout()
+    // {
+    //     return $this->render('about');
+    // }
 
     public function actionRegistration()
     {

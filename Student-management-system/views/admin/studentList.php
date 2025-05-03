@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Command\Bootstrap;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\bootstrap5\LinkPager;
@@ -21,100 +22,57 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="student-master-index container mt-4">
-
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3"><?= Html::encode($this->title) ?></h1>
         <?= Html::a('<i class="bi bi-plus-circle"></i> Create Student', ['registration'], ['class' => 'btn btn-success']) ?>
     </div>
 
-    <div class="card shadow-sm" style="overflow: auto; max-height: 400px; max-width: 100%;"></div>
-</div>
-<div class="card-body">
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'tableOptions' => ['class' => 'table table-striped table-hover table-bordered'],
-        'columns' => [
-            [
-                'header' => 'S.No',
-                'class' => 'yii\grid\SerialColumn'
-            ],
-
-            [
-                'header' => 'ID',
-                'attribute' => 'id',
-                'headerOptions' => ['class' => 'text-center'],
-                'contentOptions' => ['class' => 'text-center'],
-            ],
-            [
-                'attribute' => 'Roll_no',
-                'header' => 'Roll Number',
-            ],
-            [
-                'attribute' => 'Enroll_no',
-                'header' => 'Enroll Number',
-            ],
-            [
-                'attribute' => 'Course',
-                'header' => 'Course',
-            ],
-            [
-                'attribute' => 'Sem',
-                'header' => 'Semester',
-            ],
-            [
-                'attribute' => 'Exam_type',
-                'header' => 'Exam Type',
-            ],
-            [
-                'attribute' => 'Student_type',
-                'header' => 'Student Type',
-            ],
-            [
-                'header' => 'Gender',
-                'attribute' => 'Gender',
-                'contentOptions' => ['class' => 'text-capitalize'],
-            ],
-            [
-                'header' => 'DOB',
-                'attribute' => 'DOB',
-                'format' => ['date', 'php:Y-m-d'],
-            ],
-            [
-                'header' => 'Ph No.',
-                'attribute' => 'Phone_no',
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'header' => 'Actions',
-                'headerOptions' => ['class' => 'text-center'],
-                'contentOptions' => ['class' => 'text-center'],
-                'template' => '{view} {update} {delete}',
-                'buttons' => [
-                    'view' => function ($url, $model) {
-                            return Html::a('<i class="bi bi-eye-fill"></i>', $url, ['class' => 'btn btn-sm btn-primary', 'title' => 'View']);
-                        },
-                    'update' => function ($url, $model) {
-                            return Html::a('<i class="bi bi-pencil"></i>', $url, ['class' => 'btn btn-sm btn-warning', 'title' => 'Update']);
-                        },
-                    'delete' => function ($url, $model) {
-                            return Html::a('<i class="bi bi-trash"></i>', $url, [
+    <div class="card shadow-sm">
+        <div class="card-body" style="overflow-x: auto; overflow-y: auto; max-height: 400px;">
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'tableOptions' => ['class' => 'table table-striped table-hover table-bordered'],
+                'columns' => [
+                    ['header' => 'S.no', 'class' => 'yii\grid\SerialColumn'],
+                    'id',
+                    'Roll_no',
+                    'Enroll_no',
+                    'Course',
+                    'Sem',
+                    'Exam_type',
+                    'Student_type',
+                    'Gender',
+                    [
+                        'attribute' => 'DOB',
+                        'format' => ['date', 'php:Y-m-d'],
+                    ],
+                    'Phone_no',
+                    [
+                        'header' => 'Actions',
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{view} {update} {delete}',
+                        'buttons' => [
+                            'view' => fn($url) => Html::a('<i class="bi bi-eye-fill"></i>', $url, ['class' => 'btn btn-sm btn-primary']),
+                            'update' => fn($url) => Html::a('<i class="bi bi-pencil"></i>', $url, ['class' => 'btn btn-sm btn-warning']),
+                            'delete' => fn($url) => Html::a('<i class="bi bi-trash"></i>', $url, [
                                 'class' => 'btn btn-sm btn-danger',
-                                'title' => 'Delete',
-                                'data-confirm' => 'Are you sure you want to delete this item?',
+                                'data-confirm' => 'Are you sure?',
                                 'data-method' => 'post',
-                            ]);
-                        },
+                            ]),
+                        ],
+                    ],
                 ],
-            ],
-        ],
-    ]); ?>
-</div>
-<div class="card-footer">
-    <?= LinkPager::widget([
-        'pagination' => $dataProvider->getPagination(),
-        'options' => ['class' => 'pagination justify-content-center'],
-        'maxButtonCount' => 5, // Show pagination after 5 rows
-    ]); ?>
+            ]); ?>
+        </div>
+
+        <div class="card-footer">
+            <?= LinkPager::widget([
+                'pagination' => $dataProvider->pagination,
+                'options' => ['class' => 'pagination justify-content-center'],
+                // 'maxButtonCount' => 5,
+            ]); ?>
+        </div>
+    </div>
 </div>
 </div>
 

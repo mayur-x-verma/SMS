@@ -21,7 +21,7 @@ class AdminLoginForm extends Model
 
     public function login()
     {
-        $user = AdminUser::findOne(['Username' => $this->username]);
+        $user = AdminUser::findOne(['Username' => $this->username, 'Password' => $this->password]);
 
         if ($user && $user->Password === $this->password) {
             return Yii::$app->user->login($user); // this is key!

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\StudentMaster;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -52,14 +53,43 @@ class StudentController extends Controller
             ],
         ];
     }
+
     public function actionStudentLogin()
     {
-        $model = new StudentLoginForm(); // or whatever model you are using
+        $model = new StudentMaster();
+
+        if (Yii::$app->request->isPost) {
+            $postData = Yii::$app->request->post('StudentMaster');
+            $rollNo = $postData['Roll_no'] ?? null;
+            $dob = $postData['DOB'] ?? null;
+
+            if ($rollNo && $dob) {
+                $student = StudentMaster::findOne(['Roll_no' => $rollNo, 'DOB' => $dob]);
+                if ($student) {
+                    return $this->redirect(['student/student-report', 'id' => $student->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Invalid Roll No or Date of Birth.');
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Roll No and Date of Birth are required.');
+            }
+        }
 
         return $this->render('login', [
             'model' => $model,
         ]);
     }
 
+    public function actionStudentReport($id)
+    {
+        $model = StudentMaster::findOne($id);
+        if (!$model) {
+            throw new \yii\web\NotFoundHttpException('Student not found.');
+        }
+
+        return $this->render('studentReport', [
+            'model' => $model,
+        ]);
+    }
 }
 
