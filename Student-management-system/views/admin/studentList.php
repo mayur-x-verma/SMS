@@ -187,6 +187,7 @@ $this->params['breadcrumbs'][] = $this->title;
         return Url::toRoute([$action, 'id' => $model->id]);
     }
         ],
+        'Created_at',
     ],
 ]); ?>
 

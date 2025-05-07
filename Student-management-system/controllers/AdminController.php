@@ -76,18 +76,7 @@ class AdminController extends Controller
      *
      * @return Response|string Redirects to the previous page or renders the login view.
      */
-    // public function actionLogin()
-    // {
-    //     $model = new AdminLoginForm();
 
-    //     if ($model->load(Yii::$app->request->post()) && $model->login()) {
-    //         return $this->redirect(['registration']);
-    //     }
-
-    //     return $this->render('login', [
-    //         'model' => $model,
-    //     ]);
-    // }
 
 
     /**
@@ -168,7 +157,7 @@ class AdminController extends Controller
 
                 $sendMail = Yii::$app->mailer->compose()
                     ->setFrom('mayur.verma@samarth.ac.in')
-                    ->setTo('mayurverma619@gmail.com')
+                    ->setTo($model->Email ?? 'mayurverma619@gmail.com')
                     ->setSubject('Congratulations!')
                     ->setTextBody("Student registered with Roll No: {$model->Roll_no}")
                     ->send();
