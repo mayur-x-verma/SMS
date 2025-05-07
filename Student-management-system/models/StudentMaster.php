@@ -13,14 +13,15 @@ class StudentMaster extends ActiveRecord
     }
 
     public $photo;
+    public $email;
     public function rules()
     {
         return [
-            [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB', 'Profile_img'], 'required'],
-            [['Sem'], 'string'],
+            [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB'], 'required'],
+            [['Sem', 'Profile_img'], 'string'],
             [['DOB', 'Created_at', 'Updated_at'], 'safe'],
             [['Address'], 'string'],
-            [['Roll_no', 'Enroll_no'], 'string', 'max' => 20],
+            [['Cd_name', 'Roll_no', 'Enroll_no', 'Category', 'Email', 'Addmission_year', 'Remark'], 'string', 'max' => 255],
             [['Phone_no'], 'string', 'max' => 15],
             [['Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5'], 'string', 'max' => 100],
             [['Exam_type', 'Student_type', 'Course'], 'string', 'max' => 50],

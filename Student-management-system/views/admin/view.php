@@ -35,6 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody>
                 <tr>
+                    <th>Candidate Name</th>
+                    <td><?= Html::encode($model->Cd_name) ?></td>
+                </tr>
+                <tr>
                     <th>Roll Number</th>
                     <td><?= Html::encode($model->Roll_no) ?></td>
                 </tr>
@@ -53,6 +57,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tr>
                     <th>Exam Type</th>
                     <td><?= Html::encode($model->Exam_type) ?></td>
+                </tr>
+                <tr>
+                    <th>Addmission Year</th>
+                    <td><?= Html::encode($model->Addmission_year) ?></td>
                 </tr>
                 <tr>
                     <th>Student Type</th>
@@ -112,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tr>
                     <th>Profile Picture</th>
                     <td>
-                        <?= Html::img('@web/uploads/' . $model->Profile_img, ['alt' => 'Profile Picture', 'class' => 'img-thumbnail', 'style' => 'width: 150px; height: 150px;']) ?>
+                        <?= Html::img('@web/' . $model->Profile_img, ['alt' => 'Profile Picture', 'class' => 'img-thumbnail', 'style' => 'width: 150px; height: 150px;']) ?>
                     </td>
                 </tr>
             </tbody>

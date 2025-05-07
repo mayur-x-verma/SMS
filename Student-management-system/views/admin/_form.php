@@ -16,10 +16,12 @@ use yii\helpers\ArrayHelper;
         </div>
         <div class="card-body">
             <div class="student-registration">
-                <?php $form = ActiveForm::begin(); ?>
+                <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
                 <div class="row">
                     <div class="col-md-6">
+                        <?= $form->field($model, 'Cd_name')->textInput(['maxlength' => true, 'placeholder' => 'Student Name'])->label('Student Name', ['style' => 'font-weight: bold;']) ?>
+
                         <?= $form->field($model, 'Roll_no')->textInput(['maxlength' => true, 'placeholder' => 'Enter Roll Number'])->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?= $form->field($model, 'Enroll_no')->textInput(['maxlength' => true, 'placeholder' => 'Enter Enrollment Number'])->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?php
@@ -90,6 +92,9 @@ use yii\helpers\ArrayHelper;
 
                         <!-- Date of Birth -->
                         <?= $form->field($model, 'DOB')->input('date')->label(null, ['style' => 'font-weight: bold;']) ?>
+                        <?= $form->field($model, 'Addmission_year')->input('string')->label(null, ['style' => 'font-weight: bold;']) ?>
+                        <?= $form->field($model, 'Category')->input('string')->label(null, ['style' => 'font-weight: bold;']) ?>
+
                     </div>
                 </div>
 
@@ -118,10 +123,13 @@ use yii\helpers\ArrayHelper;
                     </div>
                 </div>
                 <?= $form->field($model, 'photo')->fileInput() ?>
-                <div class="form-group text-center mt-4">
-                    <?= Html::submitButton('Update', ['class' => 'btn btn-success btn-lg']) ?>
-                </div>
 
+                <!-- make to form field to add mail and message -->
+                <?= $form->field($model, 'Email')->input('string', ['maxlength' => true, 'placeholder' => 'Enter Email'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                <?= $form->field($model, 'Remark')->textarea(['rows' => 3, 'placeholder' => 'Enter Message'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                <div class="form-group text-center mt-4">
+                    <?= Html::submitButton('Register', ['class' => 'btn btn-success btn-lg']) ?>
+                </div>
                 <?php ActiveForm::end(); ?>
             </div>
         </div>

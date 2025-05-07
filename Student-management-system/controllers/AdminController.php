@@ -154,22 +154,23 @@ class AdminController extends Controller
             }
 
             if ($model->save()) {
-
+                $model->Email = Yii::$app->request->post('StudentMaster')['Email'];
+                //VarDumper::dump($model, 10, true);
                 $sendMail = Yii::$app->mailer->compose()
                     ->setFrom('mayur.verma@samarth.ac.in')
-                    ->setTo($model->Email ?? 'mayurverma619@gmail.com')
-                    ->setSubject('Congratulations!')
-                    ->setTextBody("Student registered with Roll No: {$model->Roll_no}")
+                    ->setTo($model->Email)
+                    ->setSubject('Bingoo!')
+                    ->setTextBody("You are now registered with Roll No: {$model->Roll_no}")
                     ->send();
 
                 Yii::$app->session->setFlash('success', 'Registration successful!' . ($sendMail ? ' Email sent!' : ' Email failed.'));
                 return $this->redirect(['student-list']);
             } else {
                 // app print and echo die for debugging
-                echo "<pre>";
-                print_r($model->getErrors());
-                echo "</pre>";
-                die();
+                // echo "<pre>";
+                // print_r($model->getErrors());
+                // echo "</pre>";
+                // die();
 
                 Yii::error('Failed to save model: ' . print_r($model->getErrors(), true));
                 Yii::$app->session->setFlash('error', 'Failed to save student.');

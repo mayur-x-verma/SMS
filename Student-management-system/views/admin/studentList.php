@@ -181,13 +181,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ),
         ],
         'Phone_no',
+        'Created_at',
         [
             'class' => ActionColumn::className(),
             'urlCreator' => function ($action, StudentMaster $model, $key, $index, $column) {
         return Url::toRoute([$action, 'id' => $model->id]);
     }
         ],
-        'Created_at',
+
     ],
 ]); ?>
 
