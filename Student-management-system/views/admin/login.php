@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3><?= Html::encode($this->title) ?></h3>
         </div>
         <div class="card-body">
-            <p class="text-center">Please fill out thesdasda following fields to login:</p>
+            <p class="text-center">Please fill out the following fields to login:</p>
 
             <?php $form = ActiveForm::begin([
                 'id' => 'login-form',

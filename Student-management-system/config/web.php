@@ -29,10 +29,12 @@ $config = [
             'errorAction' => 'admin/error',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
+            'class' => yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            'useFileTransport' => false, // set to true to save emails as files (for testing)
+            'transport' => [
+                'dsn' => 'smtp://mayur.verma@samarth.ac.in:zawrvfawfrdgztct@smtp.gmail.com:587',
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -49,8 +51,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                // '' => 'site/index', // Redirect root URL to site/index
-                // '<action:\w+>' => 'site/<action>', // Map actions in SiteController
+                '' => 'site/index', // Redirect root URL to site/index
+                '<action:\w+>' => 'site/<action>', // Map actions in SiteController
             ],
         ],
 

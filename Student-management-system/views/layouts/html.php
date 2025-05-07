@@ -2,11 +2,17 @@
 /**
  * @var yii\web\View $this
  * @var app\models\StudentMaster $model
+ * @var app\models\SubjectMaster $subjectModel
  */
+
+$recentStudent = app\models\StudentMaster::find()->orderBy(['id' => SORT_DESC])->one();
+$this->params['breadcrumbs'][] = ['label' => 'Students Lists', 'url' => ['student-list', 'id' => $recentStudent->id]];
+
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\ArrayHelper;
 
+$this->title = 'Student Registration';
 ?>
 
 <div class="container mt-4">
@@ -16,7 +22,7 @@ use yii\helpers\ArrayHelper;
         </div>
         <div class="card-body">
             <div class="student-registration">
-                <?php $form = ActiveForm::begin(); ?>
+                <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
                 <div class="row">
                     <div class="col-md-6">
@@ -118,10 +124,13 @@ use yii\helpers\ArrayHelper;
                     </div>
                 </div>
                 <?= $form->field($model, 'photo')->fileInput() ?>
-                <div class="form-group text-center mt-4">
-                    <?= Html::submitButton('Update', ['class' => 'btn btn-success btn-lg']) ?>
-                </div>
 
+                <!-- make to form field to add mail and message -->
+                <?= $form->field($model, 'Email')->textInput(['maxlength' => true, 'placeholder' => 'Enter Email'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                <?= $form->field($model, 'Remark')->textarea(['rows' => 3, 'placeholder' => 'Enter Message'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                <div class="form-group text-center mt-4">
+                    <?= Html::submitButton('Register', ['class' => 'btn btn-success btn-lg']) ?>
+                </div>
                 <?php ActiveForm::end(); ?>
             </div>
         </div>

@@ -12,10 +12,11 @@ class StudentMaster extends ActiveRecord
         return 'student_master';
     }
 
+    public $photo;
     public function rules()
     {
         return [
-            [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB'], 'required'],
+            [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB', 'Profile_img'], 'required'],
             [['Sem'], 'string'],
             [['DOB', 'Created_at', 'Updated_at'], 'safe'],
             [['Address'], 'string'],
@@ -23,6 +24,8 @@ class StudentMaster extends ActiveRecord
             [['Phone_no'], 'string', 'max' => 15],
             [['Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5'], 'string', 'max' => 100],
             [['Exam_type', 'Student_type', 'Course'], 'string', 'max' => 50],
+            [['photo'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 1024 * 1024],
+            // [['photo'], 'string'],
         ];
     }
 

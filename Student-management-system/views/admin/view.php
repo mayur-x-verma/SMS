@@ -66,6 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <th>Date of Birth</th>
                     <td><?= Html::encode($model->DOB) ?></td>
                 </tr>
+
             </tbody>
             <thead>
                 <tr>
@@ -107,6 +108,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tr>
                     <th>Address</th>
                     <td><?= Html::encode($model->Address) ?></td>
+                </tr>
+                <tr>
+                    <th>Profile Picture</th>
+                    <td>
+                        <?= Html::img('@web/uploads/' . $model->Profile_img, ['alt' => 'Profile Picture', 'class' => 'img-thumbnail', 'style' => 'width: 150px; height: 150px;']) ?>
+                    </td>
                 </tr>
             </tbody>
             <thead>

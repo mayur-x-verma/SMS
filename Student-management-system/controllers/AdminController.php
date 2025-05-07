@@ -9,11 +9,13 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use app\models\ContactForm;
 use app\models\StudentMaster;
 use app\models\StudentMasterSearch;
 use yii\helpers\ArrayHelper;
 use app\models\SubjectMaster;
+use yii\helpers\VarDumper;
 class AdminController extends Controller
 {
     /**
@@ -133,29 +135,64 @@ class AdminController extends Controller
         $model = new StudentMaster();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->Gender = implode(',', $model->Gender);  // Results in: "Male,Other"
-            //add validation check if the student already exists in the database on the basis of Roll_no, course, semester.
-            $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
+
+            if (is_array($model->Gender)) {
+                $model->Gender = implode(',', $model->Gender);
+            }
+
+
+            $upload = UploadedFile::getInstance($model, 'photo');
+            if ($upload) {
+                $filename = 'uploads/photo_' . uniqid() . '.' . $upload->extension;
+                if ($upload->saveAs($filename)) {
+                    $model->Profile_img = $filename;
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to save photo.');
+                    return $this->refresh();
+                }
+            }
+
+
+            $existingStudent = StudentMaster::findOne([
+                'Roll_no' => $model->Roll_no,
+                'Course' => $model->Course,
+                'Sem' => $model->Sem,
+            ]);
+
             if ($existingStudent) {
                 Yii::$app->session->setFlash('error', 'Student already exists!');
                 return $this->redirect(['student-list']);
-            } else {
-                $model->save() && Yii::$app->session->setFlash('success', 'Registration successful!');
-                return $this->redirect(['student-list']);
             }
-            // echo "<pre>";
-            // print_r(value: $model);
-            // echo "</pre>";
-            // exit;
+
+            if ($model->save()) {
+
+                $sendMail = Yii::$app->mailer->compose()
+                    ->setFrom('mayur.verma@samarth.ac.in')
+                    ->setTo('mayurverma619@gmail.com')
+                    ->setSubject('Congratulations!')
+                    ->setTextBody("Student registered with Roll No: {$model->Roll_no}")
+                    ->send();
+
+                Yii::$app->session->setFlash('success', 'Registration successful!' . ($sendMail ? ' Email sent!' : ' Email failed.'));
+                return $this->redirect(['student-list']);
+            } else {
+                // app print and echo die for debugging
+                echo "<pre>";
+                print_r($model->getErrors());
+                echo "</pre>";
+                die();
+
+                Yii::error('Failed to save model: ' . print_r($model->getErrors(), true));
+                Yii::$app->session->setFlash('error', 'Failed to save student.');
+            }
         }
 
         return $this->render('registration', [
             'model' => $model,
         ]);
-
-
-
     }
+
+
     /**
      * Displays a single StudentMaster model.
      * @param int $id
@@ -164,25 +201,13 @@ class AdminController extends Controller
      */
     public function actionStudentList()
     {
-        try {
-            $searchModel = new StudentMasterSearch();
-            $searchModel->search = Yii::$app->request->get('search');
-            $dataProvider = $searchModel->search($this->request->queryParams);
-
-            return $this->render('studentList', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } catch (\Exception $e) {
-            // Log the error
-            Yii::error("Exception in actionStudentList: " . $e->getMessage(), __METHOD__);
-
-            // Optionally show a basic error message to the user
-            return $this->render('error', [
-                'name' => 'Error loading student list',
-                'message' => $e->getMessage(),
-            ]);
-        }
+        $searchModel = new StudentMasterSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->sort->defaultOrder = ['Roll_no' => SORT_ASC];
+        return $this->render('studentList', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
     public function actionView($id)
     {
@@ -214,49 +239,6 @@ class AdminController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    // public function actionGetSubjects()
-    // {
-    //     Yii::$app->response->format = Response::FORMAT_JSON;
-
-    //     $course = Yii::$app->request->post('depdrop_parents')[0] ?? null;
-    //     $semester = Yii::$app->request->post('depdrop_parents')[1] ?? null;
-
-    //     if ($course !== null && $semester !== null) {
-    //         $subjects = SubjectMaster::find()
-    //             ->select(['Subject'])
-    //             ->distinct()
-    //             ->where(['Course' => $course, 'Semester' => $semester])
-    //             ->all();
-
-    //         $output = [];
-    //         foreach ($subjects as $subject) {
-    //             $output[] = ['id' => $subject->Subject, 'name' => $subject->Subject];
-    //         }
-
-    //         return Yii::$app->response->data = ['output' => $output, 'selected' => ''];
-    //     }
-
-    //     return Yii::$app->response->data = ['output' => [], 'selected' => ''];
-    // }
-
-
-    public function actionCreate()
-    {
-        $model = new StudentMaster();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['registration', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
     /**
      * Updates an existing StudentMaster model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -270,14 +252,24 @@ class AdminController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->Gender = implode(',', $model->Gender);
+            $upload = UploadedFile::getInstance($model, 'photo');
+            if ($upload) {
+                $filename = 'uploads/photo_' . uniqid() . '.' . $upload->extension;
+                $upload->saveAs($filename);
+                $model->Profile_img = $filename;
+            }
             $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
-            if ($existingStudent) {
+            if ($existingStudent !== null && StudentMaster::find()->where(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem])->count() > 1) {
                 Yii::$app->session->setFlash('error', 'Student already exists!');
                 return $this->redirect(['student-list']);
             } elseif ($model->save()) {
                 Yii::$app->session->setFlash('success', 'update successfull!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             } else {
+                echo "<pre>";
+                print_r($model->getErrors());
+                echo "</pre>";
+                die();
                 Yii::$app->session->setFlash('error', 'update failed!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             }

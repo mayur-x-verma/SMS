@@ -22,7 +22,7 @@ $this->title = 'Student Registration';
         </div>
         <div class="card-body">
             <div class="student-registration">
-                <?php $form = ActiveForm::begin(); ?>
+                <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
                 <div class="row">
                     <div class="col-md-6">
@@ -123,11 +123,14 @@ $this->title = 'Student Registration';
                         <?= $form->field($model, 'Address')->textarea(['rows' => 3, 'placeholder' => 'Enter Address'])->label(null, ['style' => 'font-weight: bold;']) ?>
                     </div>
                 </div>
+                <?= $form->field($model, 'photo')->fileInput() ?>
 
+                <!-- make to form field to add mail and message -->
+                <?= $form->field($model, 'Email')->input('email', ['maxlength' => true, 'placeholder' => 'Enter Email'])->label(null, ['style' => 'font-weight: bold;']) ?>
+                <?= $form->field($model, 'Remark')->textarea(['rows' => 3, 'placeholder' => 'Enter Message'])->label(null, ['style' => 'font-weight: bold;']) ?>
                 <div class="form-group text-center mt-4">
                     <?= Html::submitButton('Register', ['class' => 'btn btn-success btn-lg']) ?>
                 </div>
-
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
