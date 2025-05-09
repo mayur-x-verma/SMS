@@ -96,28 +96,31 @@ class AdminController extends Controller
      *
      * @return Response|string
      */
-    // public function actionContact()
-    // {
-    //     $model = new ContactForm();
-    //     if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-    //         Yii::$app->session->setFlash('contactFormSubmitted');
 
-    //         return $this->refresh();
-    //     }
-    //     return $this->render('contact', [
-    //         'model' => $model,
-    //     ]);
-    // }
 
     /**
      * Displays about page.
      *
      * @return string
      */
-    // public function actionAbout()
-    // {
-    //     return $this->render('about');
-    // }
+    public function actionGetSubjects($course, $semester)
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $subjects = SubjectMaster::find()
+            ->select(['Subject'])
+            ->where(['Course' => $course, 'Semester' => $semester])
+            ->distinct()
+            ->asArray()
+            ->all();
+
+        $data = [];
+        foreach ($subjects as $subject) {
+            $data[] = ['id' => $subject['Subject'], 'name' => $subject['Subject']];
+        }
+
+        return ['subjects' => $data];
+    }
+
 
     public function actionRegistration()
     {
@@ -156,17 +159,19 @@ class AdminController extends Controller
             if ($model->save()) {
                 $model->Email = Yii::$app->request->post('StudentMaster')['Email'];
                 //VarDumper::dump($model, 10, true);
-                $sendMail = Yii::$app->mailer->compose()
-                    ->setFrom('mayur.verma@samarth.ac.in')
-                    ->setTo($model->Email)
-                    ->setSubject('Bingoo!')
-                    ->setTextBody("You are now registered with Roll No: {$model->Roll_no}")
-                    ->send();
+                if ($model->Email && $model->Remark) {
+                    $sendMail = Yii::$app->mailer->compose()
+                        ->setFrom('mayur.verma@samarth.ac.in')
+                        ->setTo($model->Email)
+                        ->setSubject('Bingoo!')
+                        ->setTextBody($model->Remark)
+                        ->send();
+                }
 
-                Yii::$app->session->setFlash('success', 'Registration successful!' . ($sendMail ? ' Email sent!' : ' Email failed.'));
+
+                Yii::$app->session->setFlash('success', 'Registration successful!');
                 return $this->redirect(['student-list']);
             } else {
-                // app print and echo die for debugging
                 // echo "<pre>";
                 // print_r($model->getErrors());
                 // echo "</pre>";

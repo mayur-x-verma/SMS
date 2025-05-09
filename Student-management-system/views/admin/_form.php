@@ -128,7 +128,7 @@ use yii\helpers\ArrayHelper;
                 <?= $form->field($model, 'Email')->input('string', ['maxlength' => true, 'placeholder' => 'Enter Email'])->label(null, ['style' => 'font-weight: bold;']) ?>
                 <?= $form->field($model, 'Remark')->textarea(['rows' => 3, 'placeholder' => 'Enter Message'])->label(null, ['style' => 'font-weight: bold;']) ?>
                 <div class="form-group text-center mt-4">
-                    <?= Html::submitButton('Register', ['class' => 'btn btn-success btn-lg']) ?>
+                    <?= Html::submitButton('Update', ['class' => 'btn btn-success btn-lg']) ?>
                 </div>
                 <?php ActiveForm::end(); ?>
             </div>
