@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\AdminLoginForm;
+use app\models\AdminUser;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -155,7 +156,13 @@ class AdminController extends Controller
                 Yii::$app->session->setFlash('error', 'Student already exists!');
                 return $this->redirect(['student-list']);
             }
-
+            // add created by
+            $adminUser = AdminUser::findOne(Yii::$app->user->id);
+            if ($adminUser) {
+                $model->Created_by = $adminUser->Username;
+            } else {
+                $model->Created_by = 'admin';
+            }
             if ($model->save()) {
                 $model->Email = Yii::$app->request->post('StudentMaster')['Email'];
                 //VarDumper::dump($model, 10, true);
@@ -254,6 +261,13 @@ class AdminController extends Controller
                 $model->Profile_img = $filename;
             }
             $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
+            if ($existingStudent) {
+                $adminUser = AdminUser::findOne(Yii::$app->user->id);
+                $model->Updated_by = $adminUser ? $adminUser->Username : 'admin';
+            } else {
+                $model->Updated_by = 'admin';
+            }
+
             if ($existingStudent !== null && StudentMaster::find()->where(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem])->count() > 1) {
                 Yii::$app->session->setFlash('error', 'Student already exists!');
                 return $this->redirect(['student-list']);
@@ -261,10 +275,10 @@ class AdminController extends Controller
                 Yii::$app->session->setFlash('success', 'update successfull!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             } else {
-                echo "<pre>";
-                print_r($model->getErrors());
-                echo "</pre>";
-                die();
+                // echo "<pre>";
+                // print_r($model->getErrors());
+                // echo "</pre>";
+                // die();
                 Yii::$app->session->setFlash('error', 'update failed!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             }
