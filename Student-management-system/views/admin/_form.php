@@ -93,7 +93,13 @@ use yii\helpers\ArrayHelper;
                         <!-- Date of Birth -->
                         <?= $form->field($model, 'DOB')->input('date')->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?= $form->field($model, 'Addmission_year')->input('string')->label(null, ['style' => 'font-weight: bold;']) ?>
-                        <?= $form->field($model, 'Category')->input('string')->label(null, ['style' => 'font-weight: bold;']) ?>
+                        <?= $form->field($model, 'Category')->dropDownList([
+                            'General' => 'General',
+                            'OBC' => 'OBC',
+                            'SC' => 'SC',
+                            'ST' => 'ST',
+                            'Others' => 'Others',
+                        ], ['prompt' => 'Select Category'])->label(null, ['style' => 'font-weight: bold;']) ?>
 
                     </div>
                 </div>
@@ -108,8 +114,6 @@ use yii\helpers\ArrayHelper;
                             'Subject'
                         );
                         ?>
-
-
                         <?= $form->field($model, 'Sub1')->dropDownList($subjects, ['prompt' => 'Select Subject 1'])->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?= $form->field($model, 'Sub2')->dropDownList($subjects, ['prompt' => 'Select Subject 2'])->label(null, ['style' => 'font-weight: bold;']) ?>
                         <?= $form->field($model, 'Sub3')->dropDownList($subjects, ['prompt' => 'Select Subject 3'])->label(null, ['style' => 'font-weight: bold;']) ?>
@@ -135,3 +139,32 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
 </div>
+
+<?php
+$script = <<<JS
+function fetchSubjects() {
+    var course = $('#course-dropdown').val();
+    var semester = $('#semester-dropdown').val();
+
+    if (course && semester) {
+        $.ajax({
+            url: '/admin/get-subjects',
+            data: { course: course, semester: semester },
+            success: function(response) {
+                let subjectDropdowns = ['#studentmaster-sub1', '#studentmaster-sub2', '#studentmaster-sub3', '#studentmaster-sub4', '#studentmaster-sub5'];
+                subjectDropdowns.forEach(function(id) {
+                    let dropdown = $(id);
+                    dropdown.empty().append('<option value="">Select Subject</option>');
+                    response.subjects.forEach(function(item) {
+                        dropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+                });
+            }
+        });
+    }
+}
+
+$('#course-dropdown, #semester-dropdown').change(fetchSubjects);
+JS;
+$this->registerJs($script);
+?>

@@ -106,7 +106,7 @@ class AdminController extends Controller
      */
     public function actionGetSubjects($course, $semester)
     {
-        \Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $subjects = SubjectMaster::find()
             ->select(['Subject'])
             ->where(['Course' => $course, 'Semester' => $semester])
@@ -261,12 +261,18 @@ class AdminController extends Controller
                 $model->Profile_img = $filename;
             }
             $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
-            if ($existingStudent) {
-                $adminUser = AdminUser::findOne(Yii::$app->user->id);
-                $model->Updated_by = $adminUser ? $adminUser->Username : 'admin';
+            $adminUser = AdminUser::findOne(Yii::$app->user->id);
+            if ($adminUser) {
+                $model->Updated_by = $adminUser->Username;
             } else {
                 $model->Updated_by = 'admin';
             }
+            // if ($existingStudent) {
+            //     $adminUser = AdminUser::findOne(Yii::$app->user->id);
+            //     $model->Updated_by = $adminUser ? $adminUser->Username : 'admin';
+            // } else {
+            //     $model->Updated_by = 'admin';
+            // }
 
             if ($existingStudent !== null && StudentMaster::find()->where(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem])->count() > 1) {
                 Yii::$app->session->setFlash('error', 'Student already exists!');
