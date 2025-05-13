@@ -16,31 +16,10 @@ use kartik\date\DatePicker;
 $this->title = 'Student Masters';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<style>
-    .filter-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
 
-    .clear-filter {
-        color: #cc0000;
-        font-weight: bold;
-        text-decoration: none;
-        cursor: pointer;
-        margin-left: 5px;
-    }
-
-    .loading-spinner {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-    }
-</style>
-
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
 <div class="student-master-index">
 
     <h1 class="mb-4"><?= Html::encode($this->title) ?></h1>
@@ -67,20 +46,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?= Html::endForm() ?>
 
-<div class="loading-spinner">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div>
 
-<?php Pjax::begin(['timeout' => 5000]); ?>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
 
-        'id',
+        // 'id',
         'Roll_no',
         'Enroll_no',
         [
@@ -154,31 +127,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ),
         ],
         [
+
             'attribute' => 'DOB',
-            'format' => ['date', 'php:Y-d-m'],
-            'filter' => Html::tag(
-                'div',
-                DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'DOB',
-                    'pluginOptions' => [
-                        'autoclose' => true,
-                        'format' => 'yyyy-dd-mm',
-                        'todayHighlight' => true,
-                    ],
-                    'options' => [
-                        'placeholder' => 'Select Date',
-                        'class' => 'form-control',
-                        'title' => 'Filter by Date of Birth',
-                    ],
-                ]) .
-                ($searchModel->DOB ? Html::a('<i class="fas fa-times"></i>', ['student-list'], [
-                    'class' => 'clear-filter',
-                    'title' => 'Clear Date Filter',
-                    'data-filter' => 'DOB',
-                ]) : ''),
-                ['class' => 'filter-container']
-            ),
+
+            'filter' => DatePicker::widget([
+                'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                'model' => $searchModel,
+                'attribute' => 'DOB',
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true,
+                ],
+            ]),
+
         ],
         'Phone_no',
         [
@@ -187,31 +149,6 @@ $this->params['breadcrumbs'][] = $this->title;
         return Url::toRoute([$action, 'id' => $model->id]);
     }
         ],
-        'Created_at',
+        // 'Created_at',
     ],
 ]); ?>
-
-<?php
-$js = <<<JS
-        $('.clear-filter').on('click', function(e) {
-            e.preventDefault();
-            let filterParam = $(this).data('filter');
-            let input = $('[name="StudentMasterSearch[' + filterParam + ']"]');
-            if (input.length) {
-                input.val('');
-                input.closest('form').submit();
-            }
-        });
-
-        $(document).on('pjax:start', function() {
-            $('.loading-spinner').show();
-        }).on('pjax:end', function() {
-            $('.loading-spinner').hide();
-        });
-    JS;
-$this->registerJs($js);
-?>
-
-<?php Pjax::end(); ?>
-
-</div>

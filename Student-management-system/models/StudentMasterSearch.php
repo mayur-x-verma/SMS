@@ -72,7 +72,7 @@ class StudentMasterSearch extends StudentMaster
             'Updated_at' => $this->Updated_at,
         ]);
         if (!empty($this->globalSearch)) {
-            $query->orFilterWhere(['like', 'Roll_no', $this->globalSearch])
+            $query->orFilterWhere(['like', 'Cd_name', $this->globalSearch])
                 ->orFilterWhere(['like', 'Enroll_no', $this->globalSearch])
                 ->orFilterWhere(['like', 'Course', $this->globalSearch])
                 ->orFilterWhere(['like', 'Sem', $this->globalSearch])
