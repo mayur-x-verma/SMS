@@ -9,6 +9,10 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\StudentLoginForm;
+use app\components\EncryptHelper;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
 
 class StudentController extends Controller
 {
@@ -66,7 +70,7 @@ class StudentController extends Controller
             if ($rollNo && $dob) {
                 $student = StudentMaster::findOne(['Roll_no' => $rollNo, 'DOB' => $dob]);
                 if ($student) {
-                    return $this->redirect(['student/student-report', 'id' => $student->id]);
+                    return $this->redirect(['student/student-report', 'id' => EncryptHelper::encrypt($student->id)]);
                 } else {
                     Yii::$app->session->setFlash('error', 'Invalid Roll No or Date of Birth.');
                 }
@@ -82,10 +86,26 @@ class StudentController extends Controller
 
     public function actionStudentReport($id)
     {
-        $model = StudentMaster::findOne($id);
-        if (!$model) {
-            throw new \yii\web\NotFoundHttpException('Student not found.');
+        try {
+            $decryptedId = EncryptHelper::decrypt($id);
+
+        } catch (\Exception $e) {
+
+            throw new BadRequestHttpException('Invalid ID format.');
         }
+        // echo '<pre>';
+        // var_dump($decryptedId);
+        // echo '</pre>';
+        // exit;
+        $model = StudentMaster::findOne($decryptedId);
+
+        if (!$model) {
+            throw new NotFoundHttpException('Student not found.');
+        }
+
+        // if ($model->id != Yii::$app->user->id) {
+        //     throw new ForbiddenHttpException('You are not allowed to view this report.');
+        // }
 
         return $this->render('studentReport', [
             'model' => $model,

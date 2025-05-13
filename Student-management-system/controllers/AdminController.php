@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\AdminLoginForm;
+use app\models\AdminUser;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -96,28 +97,31 @@ class AdminController extends Controller
      *
      * @return Response|string
      */
-    // public function actionContact()
-    // {
-    //     $model = new ContactForm();
-    //     if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-    //         Yii::$app->session->setFlash('contactFormSubmitted');
 
-    //         return $this->refresh();
-    //     }
-    //     return $this->render('contact', [
-    //         'model' => $model,
-    //     ]);
-    // }
 
     /**
      * Displays about page.
      *
      * @return string
      */
-    // public function actionAbout()
-    // {
-    //     return $this->render('about');
-    // }
+    public function actionGetSubjects($course, $semester)
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $subjects = SubjectMaster::find()
+            ->select(['Subject'])
+            ->where(['Course' => $course, 'Semester' => $semester])
+            ->distinct()
+            ->asArray()
+            ->all();
+
+        $data = [];
+        foreach ($subjects as $subject) {
+            $data[] = ['id' => $subject['Subject'], 'name' => $subject['Subject']];
+        }
+
+        return ['subjects' => $data];
+    }
+
 
     public function actionRegistration()
     {
@@ -152,24 +156,33 @@ class AdminController extends Controller
                 Yii::$app->session->setFlash('error', 'Student already exists!');
                 return $this->redirect(['student-list']);
             }
-
+            // add created by
+            $adminUser = AdminUser::findOne(Yii::$app->user->id);
+            if ($adminUser) {
+                $model->Created_by = $adminUser->Username;
+            } else {
+                $model->Created_by = 'admin';
+            }
             if ($model->save()) {
+                $model->Email = Yii::$app->request->post('StudentMaster')['Email'];
+                //VarDumper::dump($model, 10, true);
+                if ($model->Email && $model->Remark) {
+                    $sendMail = Yii::$app->mailer->compose()
+                        ->setFrom('mayur.verma@samarth.ac.in')
+                        ->setTo($model->Email)
+                        ->setSubject('Bingoo!')
+                        ->setTextBody($model->Remark)
+                        ->send();
+                }
 
-                $sendMail = Yii::$app->mailer->compose()
-                    ->setFrom('mayur.verma@samarth.ac.in')
-                    ->setTo($model->Email ?? 'mayurverma619@gmail.com')
-                    ->setSubject('Congratulations!')
-                    ->setTextBody("Student registered with Roll No: {$model->Roll_no}")
-                    ->send();
 
-                Yii::$app->session->setFlash('success', 'Registration successful!' . ($sendMail ? ' Email sent!' : ' Email failed.'));
+                Yii::$app->session->setFlash('success', 'Registration successful!');
                 return $this->redirect(['student-list']);
             } else {
-                // app print and echo die for debugging
-                echo "<pre>";
-                print_r($model->getErrors());
-                echo "</pre>";
-                die();
+                // echo "<pre>";
+                // print_r($model->getErrors());
+                // echo "</pre>";
+                // die();
 
                 Yii::error('Failed to save model: ' . print_r($model->getErrors(), true));
                 Yii::$app->session->setFlash('error', 'Failed to save student.');
@@ -248,6 +261,13 @@ class AdminController extends Controller
                 $model->Profile_img = $filename;
             }
             $existingStudent = StudentMaster::findOne(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem]);
+            if ($existingStudent) {
+                $adminUser = AdminUser::findOne(Yii::$app->user->id);
+                $model->Updated_by = $adminUser ? $adminUser->Username : 'admin';
+            } else {
+                $model->Updated_by = 'admin';
+            }
+
             if ($existingStudent !== null && StudentMaster::find()->where(['Roll_no' => $model->Roll_no, 'Course' => $model->Course, 'Sem' => $model->Sem])->count() > 1) {
                 Yii::$app->session->setFlash('error', 'Student already exists!');
                 return $this->redirect(['student-list']);
@@ -255,10 +275,10 @@ class AdminController extends Controller
                 Yii::$app->session->setFlash('success', 'update successfull!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             } else {
-                echo "<pre>";
-                print_r($model->getErrors());
-                echo "</pre>";
-                die();
+                // echo "<pre>";
+                // print_r($model->getErrors());
+                // echo "</pre>";
+                // die();
                 Yii::$app->session->setFlash('error', 'update failed!');
                 return $this->redirect(['student-list', 'id' => $model->id]);
             }

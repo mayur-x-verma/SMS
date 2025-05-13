@@ -143,6 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         ],
         'Phone_no',
+        'Created_at',
         [
             'class' => ActionColumn::className(),
             'urlCreator' => function ($action, StudentMaster $model, $key, $index, $column) {

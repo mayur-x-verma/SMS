@@ -13,14 +13,19 @@ class StudentMaster extends ActiveRecord
     }
 
     public $photo;
+    public $email;
     public function rules()
     {
         return [
-            [['Roll_no', 'Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB', 'Profile_img'], 'required'],
-            [['Sem'], 'string'],
+            [['Roll_no', 'Addmission_year'], 'number'],
+            [['Enroll_no', 'Course', 'Sem', 'Exam_type', 'Gender', 'DOB'], 'required'],
+            [['Cd_name'], 'match', 'pattern' => '/^[a-zA-Z\s]+$/', 'message' => 'Cd_name can only contain letters and spaces.'],
+            [['Cd_name'], 'required'],
+            [['Sem', 'Profile_img'], 'string'],
             [['DOB', 'Created_at', 'Updated_at'], 'safe'],
             [['Address'], 'string'],
-            [['Roll_no', 'Enroll_no'], 'string', 'max' => 20],
+            [['Enroll_no', 'Category', 'Remark'], 'string', 'max' => 255],
+            [['Email'], 'email'],
             [['Phone_no'], 'string', 'max' => 15],
             [['Sub1', 'Sub2', 'Sub3', 'Sub4', 'Sub5'], 'string', 'max' => 100],
             [['Exam_type', 'Student_type', 'Course'], 'string', 'max' => 50],

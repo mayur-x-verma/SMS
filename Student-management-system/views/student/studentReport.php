@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var app\models\StudentMaster $model */
 \yii\web\YiiAsset::register($this);
-$this->title = "Student Report: " . Html::encode($model->Roll_no);
+$this->title = "Student Report: " . Html::encode($model->Cd_name);
 
 ?>
 <div class="student-master-view">
@@ -25,6 +25,10 @@ $this->title = "Student Report: " . Html::encode($model->Roll_no);
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <th>Candidate Name</th>
+                    <td><?= Html::encode($model->Cd_name) ?></td>
+                </tr>
                 <tr>
                     <th>Roll Number</th>
                     <td><?= Html::encode($model->Roll_no) ?></td>
@@ -91,6 +95,12 @@ $this->title = "Student Report: " . Html::encode($model->Roll_no);
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <th>Profile Picture</th>
+                    <td>
+                        <?= Html::img('@web/' . $model->Profile_img, ['alt' => 'Profile Picture', 'class' => 'img-thumbnail', 'style' => 'width: 150px; height: 150px;']) ?>
+                    </td>
+                </tr>
                 <tr>
                     <th>Phone Number</th>
                     <td><?= Html::encode($model->Phone_no) ?></td>

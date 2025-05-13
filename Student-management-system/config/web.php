@@ -51,8 +51,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '' => 'site/index', // Redirect root URL to site/index
-                '<action:\w+>' => 'site/<action>', // Map actions in SiteController
+                // '' => 'site/index', // Redirect root URL to site/index
+                // '<action:\w+>' => 'site/<action>', // Map actions in SiteController
             ],
         ],
 
